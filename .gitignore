@@ -53,3 +53,9 @@ docs/_build/
 # PyBuilder
 target/
 
+# Virtualenv
+bin/
+include/
+lib/
+lib64
+pip-selfcheck.json

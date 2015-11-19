@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from utilidades import *
+from tabla import *
 
 def main():
     # n = int(input("Ingrese el número de líneas que va a escribir: \n>>"))
@@ -10,8 +11,11 @@ def main():
     textoLeido = archivo.read()
 
     codigoHuffman = huffman(textoLeido)
-    for key in codigoHuffman:
-        print( key, codigoHuffman[key][0], codigoHuffman[key][1] )
+    tabla = []
+
+    for key in sorted(codigoHuffman, key=codigoHuffman.get):
+        tabla.append([key, codigoHuffman[key][0], codigoHuffman[key][1]])
+    printTablaHuffman(tabla)
 
 def huffman(texto):
     tabla = contarAparicionesDeTexto(texto)
