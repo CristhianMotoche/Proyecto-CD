@@ -2,6 +2,17 @@
 
 from huffman import *
 from tabla import *
+from concurrent.futures import ThreadPoolExecutor
+import threading
+
+def contarParaleloAparicionesDeTexto(textoInput):
+    global tabla
+
+    for caracter in textoInput:
+        if caracter not in tabla:
+            tabla[caracter] = 0
+    for caracter in textoInput:
+        tabla[caracter] += 1
 
 def main():
     # INPUT
@@ -11,7 +22,14 @@ def main():
     textoLeido = archivo.read()
 
     # CONTAR PESOS
-    tabla = contarAparicionesDeTexto(textoLeido)
+    global tabla
+    tabla = {}
+    n = len(textoLeido)//2
+    x = [textoLeido[:n], textoLeido[n:]]
+
+    t = ThreadPoolExecutor(max_workers=2)
+    t.map(contarParaleloAparicionesDeTexto, x)
+    t.shutdown()
 
     # GENERAR ARBOL
     cola = encolarNodos(tabla)
@@ -29,6 +47,9 @@ def main():
         tablaResultado.append([key, tabla[key], codigoHuffman[key]])
     printTablaHuffman(tablaResultado)
 
-    # print(huffman.decodificar(huffman.codificar(textoLeido)))
+    print(huffman.decodificar(huffman.codificar(textoLeido)))
+
 if __name__=="__main__":
     main()
+
+

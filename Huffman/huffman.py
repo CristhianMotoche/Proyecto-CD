@@ -22,10 +22,8 @@ class Huffman(object):
         textoCodificado = ""
         acumulador = ""
         for caracter in textoPlano:
-            acumulador += caracter
-            if acumulador in self.codigo:
-                textoCodificado += self.codigo[acumulador]
-                acumulador = ""
+            if caracter in self.codigo:
+                textoCodificado += self.codigo[caracter]
         return textoCodificado
 
     def decodificar(self, textoCodificado):
