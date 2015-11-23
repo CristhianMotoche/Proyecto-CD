@@ -7,7 +7,7 @@ def leerNLineas(n):
 
     for _ in range(n):
         linea = input()
-        linea += " "
+        linea += '\n'
         texto += linea
 
     return texto
@@ -16,16 +16,23 @@ def contarAparicionesDeTexto(texto):
     diccionario = {}
     for caracter in texto:
         diccionario[caracter] = 0
-
     for caracter in texto:
         diccionario[caracter] += 1
-
     return diccionario
 
 def encolarNodos(tabla):
     cola = Cola()
     for clave in tabla:
         cola.push(Nodo(clave, tabla[clave]))
+    return cola
+
+def generarArbol(cola):
+    while len(cola.cola) > 1:
+        izq = cola.pop()
+        der = cola.pop()
+        nodo = Nodo(None, der.peso + izq.peso)
+        nodo.setHijos(izq, der)
+        cola.push(nodo)
     return cola
 
 def codificar(codigos, simbolo, nodo):
@@ -39,11 +46,8 @@ def codificar(codigos, simbolo, nodo):
         codigos.update( codificar(codigos, simbolo + "1", nodo.der) )
     return codigos
 
-def agruparNodos(cola):
-    while len(cola.cola) > 1:
-            izq = cola.pop()
-            der = cola.pop()
-            nodo = Nodo(None, der.peso + izq.peso)
-            nodo.setHijos(izq, der)
-            cola.push(nodo)
-    return cola
+def reverse(diccionario):
+    nuevoDiccionario = {}
+    for key in diccionario:
+        nuevoDiccionario[diccionario[key]] = key
+    return nuevoDiccionario

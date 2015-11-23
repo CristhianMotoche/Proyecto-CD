@@ -1,27 +1,34 @@
 #!/usr/bin/python3
 
-from utilidades import *
+from huffman import *
 from tabla import *
 
 def main():
-    # n = int(input("Ingrese el número de líneas que va a escribir: \n>>"))
+    # INPUT
+    #n = int(input("Ingrese el número de líneas que va a escribir: \n>>"))
     #textoLeido = leerNLineas(n)
-
     archivo = open('text.txt', 'r')
     textoLeido = archivo.read()
 
-    codigoHuffman = huffman(textoLeido)
-    tabla = []
+    # CONTAR PESOS
+    tabla = contarAparicionesDeTexto(textoLeido)
 
-    for key in sorted(codigoHuffman, key=codigoHuffman.get):
-        tabla.append([key, codigoHuffman[key][0], codigoHuffman[key][1]])
-    printTablaHuffman(tabla)
-
-def huffman(texto):
-    tabla = contarAparicionesDeTexto(texto)
+    # GENERAR ARBOL
     cola = encolarNodos(tabla)
-    cola = agruparNodos(cola)
-    return codificar({}, "", cola.pop())
+    cola = generarArbol(cola)
+    arbol = cola.pop()
 
+    # GENERAR CODIGO HUFFMAN
+    huffman = Huffman()
+    huffman.generarCodigo('', arbol)
+    codigoHuffman = huffman.getCodigo()
+
+    # OUTPUT
+    tablaResultado = []
+    for key in sorted(codigoHuffman, key=codigoHuffman.get):
+        tablaResultado.append([key, tabla[key], codigoHuffman[key]])
+    printTablaHuffman(tablaResultado)
+
+    # print(huffman.decodificar(huffman.codificar(textoLeido)))
 if __name__=="__main__":
     main()
