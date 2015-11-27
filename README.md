@@ -4,7 +4,7 @@
 - virtualenv-3.4 .
 
 ## Active virtual environment
-- source bin/active 
+- source bin/activate
 
 ## Install dependencies
 - pip3 install -r requirements.txt

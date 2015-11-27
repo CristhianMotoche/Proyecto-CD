@@ -3,6 +3,7 @@
 from huffman import *
 from tabla import *
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 import threading
 
 def contarParaleloAparicionesDeTexto(textoInput):
@@ -20,14 +21,25 @@ def main():
     #textoLeido = leerNLineas(n)
     archivo = open('text.txt', 'r')
     textoLeido = archivo.read()
+    threads = int(input("Ingrese el número de threads que desea \n>>>"))
+
+    # OBTENER TIEMPO INICIAL
+    tIni = datetime.now()
 
     # CONTAR PESOS
     global tabla
     tabla = {}
-    n = len(textoLeido)//2
-    x = [textoLeido[:n], textoLeido[n:]]
+    n = len(textoLeido)
+    x = []
+    ini = 0
+    fin = n//threads
+    for _ in range(1, threads):
+        x.append(textoLeido[ini:fin])
+        ini = fin
+        fin += n//threads
+    x.append(textoLeido[ini:])
 
-    t = ThreadPoolExecutor(max_workers=2)
+    t = ThreadPoolExecutor(max_workers=threads)
     t.map(contarParaleloAparicionesDeTexto, x)
     t.shutdown()
 
@@ -47,7 +59,17 @@ def main():
         tablaResultado.append([key, tabla[key], codigoHuffman[key]])
     printTablaHuffman(tablaResultado)
 
-    print(huffman.decodificar(huffman.codificar(textoLeido)))
+    # OBTENER TIEMPO FINAL
+    tFin = datetime.now()
+
+    # IMPRIMIR DIFERENCIA TIEMPO
+    print("Se ha demorado:")
+    print(str((tFin - tIni).total_seconds()) + "[s]")
+
+    # Probar propiedad de codificación
+    # Mensaje = DECODIFICAR(CODIFICAR(Mensaje))
+    # Descomente esta línea para ver el mensaje original
+    # print(huffman.decodificar(huffman.codificar(textoLeido)))
 
 if __name__=="__main__":
     main()
