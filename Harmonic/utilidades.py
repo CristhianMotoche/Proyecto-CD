@@ -17,4 +17,4 @@ def sumarDigitos(allDigits):
 def convertir(sumaDigits):
     sumaDigits.insert(1, '.')
     sumaDigits = map(str, sumaDigits)
-    return "".join(sumaDigits)[:-11]
+    return "".join(sumaDigits)

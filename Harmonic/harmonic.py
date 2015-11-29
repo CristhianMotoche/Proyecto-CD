@@ -27,4 +27,4 @@ class Harmonic(object):
             digits[d - i - 1] += int(digits[d - i] / 10)
             digits[d - i] %= 10
 
-        return digits
+        return digits[:-11]
