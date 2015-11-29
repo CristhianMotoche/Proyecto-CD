@@ -3,7 +3,6 @@
 from huffman import *
 from tabla import *
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
 import threading
 
 def contarParaleloAparicionesDeTexto(textoInput):
@@ -22,9 +21,6 @@ def main():
     archivo = open('text.txt', 'r')
     textoLeido = archivo.read()
     threads = int(input("Ingrese el número de threads que desea \n>>>"))
-
-    # OBTENER TIEMPO INICIAL
-    tIni = datetime.now()
 
     # CONTAR PESOS
     global tabla
@@ -58,13 +54,6 @@ def main():
     for key in sorted(codigoHuffman, key=codigoHuffman.get):
         tablaResultado.append([key, tabla[key], codigoHuffman[key]])
     printTablaHuffman(tablaResultado)
-
-    # OBTENER TIEMPO FINAL
-    tFin = datetime.now()
-
-    # IMPRIMIR DIFERENCIA TIEMPO
-    print("Se ha demorado:")
-    print(str((tFin - tIni).total_seconds()) + "[s]")
 
     # Probar propiedad de codificación
     # Mensaje = DECODIFICAR(CODIFICAR(Mensaje))

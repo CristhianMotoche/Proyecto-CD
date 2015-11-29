@@ -3,10 +3,10 @@ class Harmonic(object):
         """Constructor """
         super(Harmonic, self).__init__()
 
-    def sum(self, d, n):
+    def sum(self, d, n, m):
         digits = [0]*(d+11)
 
-        for i in range(1,n + 1):
+        for i in range(m,n + 1):
             remainder = 1
             for digit in range(d + 11):
                 if remainder == 0:
@@ -27,7 +27,4 @@ class Harmonic(object):
             digits[d - i - 1] += int(digits[d - i] / 10)
             digits[d - i] %= 10
 
-        digits.insert(1, '.')
-        digits = map(str, digits)
-
-        return "".join(digits)
+        return digits
