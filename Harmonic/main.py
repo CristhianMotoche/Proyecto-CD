@@ -3,6 +3,7 @@
 from harmonic import *
 from utilidades import *
 import threading
+import datetime
 import math
 
 def colectarDigitos(d, n, m):
@@ -19,6 +20,7 @@ def main():
     n = int(input("Ingrese N (1 <= N <= 10^8): \n>>"))
     threads = int(input("Ingrese numero de threads: \n>>"))
 
+    ini = datetime.datetime.now()
     for i in range(threads):
         if i < n:
             max = i*n//threads + 1
@@ -38,6 +40,9 @@ def main():
     suma = sumarDigitos(allDigits)
     suma.reverse()
     print(convertir(suma))
+
+    print("Tiempo: ")
+    print(str(datetime.datetime.now() - ini) + " [s]")
 
 if __name__=="__main__":
     main()
