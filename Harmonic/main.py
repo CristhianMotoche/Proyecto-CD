@@ -1,3 +1,4 @@
+
 #!/usr/bin/python3
 from harmonic import *
 from utilidades import *
@@ -12,26 +13,27 @@ def colectarDigitos(d, n, m):
 def main():
     global allDigits
     allDigits = []
+    limits = []
 
     d = int(input("Ingrese D (1 <= D <= 10^5): \n>>"))
     n = int(input("Ingrese N (1 <= N <= 10^8): \n>>"))
-    threads = 2
+    threads = int(input("Ingrese numero de threads: \n>>"))
 
-    if n%2 == 0:
-        max = n//2
-        min = n//2 - 1
-    else:
-        max = math.ceil(n/2)
-        min = math.floor(n/2)
+    for i in range(threads):
+        if i < n:
+            max = i*n//threads + 1
+            min = (i+1)*n//threads
+            limits.append((max,min))
 
-    t1 = threading.Thread(target=colectarDigitos, args=(d,n,max))
-    t1.start()
+    ts = []
+    for t in range(len(limits)):
+        ts.append(threading.Thread(target=colectarDigitos, args=(d,limits[t][1],limits[t][0])))
 
-    t2 = threading.Thread(target=colectarDigitos, args=(d,min,1))
-    t2.start()
+    for t in ts:
+        t.start()
 
-    t1.join()
-    t2.join()
+    for t in ts:
+        t.join()
 
     suma = sumarDigitos(allDigits)
     suma.reverse()
