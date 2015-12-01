@@ -2,17 +2,17 @@
 #!/usr/bin/python3
 from harmonic import *
 from utilidades import *
+import multiprocessing as mp
 import threading
 import datetime
 import math
 
-def colectarDigitos(d, n, m):
-    global allDigits
+def colectarDigitos(d, n, m, q):
     harmonic = Harmonic()
-    allDigits.append(harmonic.sum(d, n, m))
+    q.put(harmonic.sum(d, n, m))
 
 def main():
-    global allDigits
+    output = mp.Queue()
     allDigits = []
     limits = []
 
@@ -21,15 +21,18 @@ def main():
     threads = int(input("Ingrese numero de threads: \n>>"))
 
     ini = datetime.datetime.now()
-    for i in range(threads):
-        if i < n:
-            max = i*n//threads + 1
-            min = (i+1)*n//threads
-            limits.append((max,min))
+    i = 0
+    while i != threads:
+        max = i*n//threads + 1
+        min = (i+1)*n//threads
+        limits.append((max,min))
+        i+=1
+
+    print(limits)
 
     ts = []
     for t in range(len(limits)):
-        ts.append(threading.Thread(target=colectarDigitos, args=(d,limits[t][1],limits[t][0])))
+        ts.append(mp.Process(target=colectarDigitos, args=(d,limits[t][1],limits[t][0], output)))
 
     for t in ts:
         t.start()
@@ -37,6 +40,9 @@ def main():
     for t in ts:
         t.join()
 
+    allDigits = [output.get() for t in ts]
+    for digitos in allDigits:
+        print(digitos)
     suma = sumarDigitos(allDigits)
     suma.reverse()
     print(convertir(suma))

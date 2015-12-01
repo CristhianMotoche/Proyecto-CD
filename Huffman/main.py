@@ -1,19 +1,19 @@
 #!/usr/bin/python3
 
 from huffman import *
-from tabla import *
+from tabla import printTablaHuffman
 from concurrent.futures import ThreadPoolExecutor
-import threading
+import multiprocessing as mp
 import datetime
 
-def contarParaleloAparicionesDeTexto(textoInput):
-    global tabla
-
+def contarParaleloAparicionesDeTexto(textoInput, q):
+    tabla = {}
     for caracter in textoInput:
         if caracter not in tabla:
             tabla[caracter] = 0
     for caracter in textoInput:
         tabla[caracter] += 1
+    q.put(tabla)
 
 def main():
     # INPUT
@@ -23,11 +23,8 @@ def main():
     textoLeido = archivo.read()
     threads = int(input("Ingrese el número de threads que desea \n>>>"))
 
-    init = datetime.datetime.now()
-
     # CONTAR PESOS
-    global tabla
-    tabla = {}
+    output = mp.Queue()
     n = len(textoLeido)
     x = []
     ini = 0
@@ -38,9 +35,26 @@ def main():
         fin += n//threads
     x.append(textoLeido[ini:])
 
-    t = ThreadPoolExecutor(max_workers=threads)
-    t.map(contarParaleloAparicionesDeTexto, x)
-    t.shutdown()
+    init = datetime.datetime.now()
+
+    ts = []
+    for t in range(threads):
+        ts.append(mp.Process(target=contarParaleloAparicionesDeTexto, args=(x[t],output)))
+
+    for t in ts:
+        t.start()
+
+    for t in ts:
+        t.join()
+
+    tabla = {}
+    tablas = [output.get() for t in ts ]
+    for tab in tablas:
+        for key in tab:
+            if key not in tabla:
+                tabla[key] = 0
+        for key in tab:
+            tabla[key] += tab[key]
 
     # GENERAR ARBOL
     cola = encolarNodos(tabla)
