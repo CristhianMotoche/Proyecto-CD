@@ -41,8 +41,6 @@ def main():
         t.join()
 
     allDigits = [output.get() for t in ts]
-    for digitos in allDigits:
-        print(digitos)
     suma = sumarDigitos(allDigits)
     suma.reverse()
     print(convertir(suma))

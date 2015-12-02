@@ -3,17 +3,12 @@ def sumarDigitos(allDigits):
     suma = 0
     resto = 0
     for i in range(len(allDigits[0])):
-        suma = 0
+        suma = resto
         for j in range(len(allDigits)):
-            suma += allDigits[j][-(i+1)] + resto
-            if suma > 9:
-                resto = suma//10
-                suma = suma - 10
-            else:
-                resto = 0
+            suma += allDigits[j][-(i+1)]
+        resto = suma//10
+        suma = suma - resto*10
         sumaDigits.append(suma)
-        print(suma)
-        print(resto)
     return sumaDigits
 
 def convertir(sumaDigits):
